@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Next.js build output
+.next/
+out/
+build/
+dist/
+
+# Python cache & virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.env
+.env.local
+.env.*.local
+venv/
+env/
+ENV/
+
+# Storage & local artifacts (optional to exclude large temporary generations)
+*.log
+storage/generated/ai_*.jpg
+storage/generated/hf_*.jpg
+
+# OS files
+.DS_Store
+Thumbs.db

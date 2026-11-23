@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LAUNCH AI – Final Viva Presentation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #060911;
+      color: #F8FAFC;
+      overflow: hidden;
+    }
+    .slide {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.35s ease-in-out, transform 0.35s ease-in-out;
+      transform: translateY(8px);
+      height: 100vh;
+      width: 100vw;
+    }
+    .slide.active {
+      display: flex;
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .gradient-text-purple {
+      background: linear-gradient(135deg, #A855F7 0%, #6366F1 50%, #3B82F6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .gradient-btn-purple {
+      background: linear-gradient(135deg, #9333EA 0%, #6366F1 100%);
+    }
+    .glass-card {
+      background: #0D121F;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 1.25rem;
+    }
+  </style>
+</head>
+<body class="bg-[#060911] text-slate-100 select-none">
+
+  <!-- Presentation Slides Container -->
+  <div id="slides-container" class="relative w-screen h-screen">
+
+    <!-- SLIDE 1: Title Slide -->
+    <div class="slide active flex-col justify-between p-12 lg:p-16">
+      <div class="flex justify-between items-center">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl gradient-btn-purple flex items-center justify-center text-white font-black text-xl shadow-lg shadow-purple-500/20">
+            L
+          </div>
+          <span class="font-black text-xl tracking-wider text-white">LAUNCH <span class="text-purple-400">AI</span></span>
+        </div>
+        <div class="flex gap-2 text-xs font-bold">
+          <span class="px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300">Next.js 14</span>
+          <span class="px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-300">FastAPI</span>
+          <span class="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300">Turbo Diffusion</span>
+          <span class="px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300">TRAI Governed</span>
+        </div>
+      </div>
+
+      <div class="max-w-4xl space-y-6">
+        <div class="inline-block px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 font-semibold text-xs uppercase tracking-widest">
+          Final Engineering Project Defense • 2026
+        </div>
+        <h1 class="text-5xl lg:text-7xl font-black text-white leading-tight">
+          Enterprise Generative Visual Diffusion & <span class="gradient-text-purple">Brand Governance</span> for Telecoms
+        </h1>
+        <p class="text-lg text-slate-400 max-w-2xl font-normal leading-relaxed">
+          An end-to-end generative SaaS platform automating commercial visual synthesis, dynamic canvas stamping, and automated TRAI regulatory compliance for telecom giants (Reliance Jio, Airtel, Vi).
+        </p>
+      </div>
+
+      <div class="flex justify-between items-end border-t border-white/10 pt-6">
+        <div>
+          <div class="text-xs uppercase font-bold text-slate-500 tracking-wider">Lead Architect & Developer</div>
+          <div class="text-lg font-bold text-white mt-0.5">Ramya Deepika Kudelli</div>
+          <div class="text-xs text-purple-400 font-mono">Master Administrator • Telecom AI Suite</div>
+        </div>
+        <div class="text-right">
+          <div class="text-xs text-slate-500">Press <kbd class="px-2 py-0.5 rounded bg-white/10 text-white font-mono font-bold">Space</kbd> or <kbd class="px-2 py-0.5 rounded bg-white/10 text-white font-mono font-bold">→</kbd> to navigate</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 2: The Problem -->
+    <div class="slide flex-col justify-between p-12 lg:p-16">
+      <div>
+        <div class="text-xs uppercase font-bold text-purple-400 tracking-widest">Industry Bottlenecks</div>
+        <h2 class="text-4xl lg:text-5xl font-black text-white mt-1">The Problem in Telecom Marketing</h2>
+        <p class="text-slate-400 text-sm mt-2 max-w-2xl">Traditional telecom creative workflows cannot keep up with high-frequency tariff and festive offer cycles.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-auto">
+        <div class="glass-card p-8 space-y-4 border-red-500/20 bg-[#0E121E]">
+          <div class="w-14 h-14 rounded-2xl bg-red-500/10 border border-red-500/30 flex items-center justify-center text-3xl">
+            ⏱️
+          </div>
+          <h3 class="text-xl font-bold text-white">3 to 7 Days Turnaround</h3>
+          <p class="text-slate-400 text-xs leading-relaxed">
+            Creative agencies take several days to draft, revise, and render marketing banners for new tariff launches (Diwali offers, IPL 5G data boosters).
+          </p>
+          <div class="text-xs font-mono text-red-400 font-bold bg-red-500/10 px-3 py-1 rounded-lg inline-block">
+            Slow Time-to-Market
+          </div>
+        </div>
+
+        <div class="glass-card p-8 space-y-4 border-amber-500/20 bg-[#0E121E]">
+          <div class="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-3xl">
+            ⚖️
+          </div>
+          <h3 class="text-xl font-bold text-white">Heavy TRAI Penalties</h3>
+          <p class="text-slate-400 text-xs leading-relaxed">
+            Telecom ads missing mandatory terms (FUP data caps, post-FUP speed, GST inclusion, validity, asterisk disclaimers) face immediate takedowns & crores in fines.
+          </p>
+          <div class="text-xs font-mono text-amber-400 font-bold bg-amber-500/10 px-3 py-1 rounded-lg inline-block">
+            Regulatory Compliance Risk
+          </div>
+        </div>
+
+        <div class="glass-card p-8 space-y-4 border-purple-500/20 bg-[#0E121E]">
+          <div class="w-14 h-14 rounded-2xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-3xl">
+            💸
+          </div>
+          <h3 class="text-xl font-bold text-white">Costly & Rate-Limited APIs</h3>
+          <p class="text-slate-400 text-xs leading-relaxed">
+            Commercial AI APIs (Midjourney, DALL-E 3) cost up to $0.08 per generation and impose strict rate limits, making enterprise scale expensive.
+          </p>
+          <div class="text-xs font-mono text-purple-400 font-bold bg-purple-500/10 px-3 py-1 rounded-lg inline-block">
+            High Operational Expenditure
+          </div>
+        </div>
+      </div>
+
+      <div class="text-xs text-slate-500 border-t border-white/10 pt-4 flex justify-between">
+        <span>Slide 02 / 12</span>
+        <span>Problem Definition • Telecom Creative Challenges</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 3: The Solution (Traditional vs LAUNCH AI) -->
+    <div class="slide flex-col justify-between p-12 lg:p-16">
+      <div>
+        <div class="text-xs uppercase font-bold text-emerald-400 tracking-widest">Architectural Paradigm Shift</div>
+        <h2 class="text-4xl lg:text-5xl font-black text-white mt-1">Traditional Agency vs. LAUNCH AI</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 my-auto">
+        <!-- Traditional Agency -->
+        <div class="glass-card p-8 border-red-500/20 space-y-5 bg-[#0F1320]">
+          <div class="flex items-center justify-between">
+            <span class="text-sm font-bold text-red-400 uppercase tracking-wider">Traditional Agency Pipeline</span>
+            <span class="text-xs bg-red-500/10 text-red-300 px-3 py-1 rounded-full border border-red-500/20 font-bold">Legacy</span>
+          </div>
+          <ul class="space-y-3.5 text-xs text-slate-300">
+            <li class="flex items-start gap-3">
+              <span class="text-red-400 font-bold text-sm">✕</span>
+              <span><strong>3–7 Days Turnaround:</strong> Manual concept drafting, photoshop retouches, and approval email chains.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="text-red-400 font-bold text-sm">✕</span>
+              <span><strong>Manual Compliance Checks:</strong> Human legal reviews prone to missing mandatory TRAI fine-print terms.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="text-red-400 font-bold text-sm">✕</span>
+              <span><strong>Fragmented Brand Tokens:</strong> Regional teams alter official brand colors and logo ratios.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="text-red-400 font-bold text-sm">✕</span>
+              <span><strong>High Cost:</strong> Heavy agency retainer fees per campaign release.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- LAUNCH AI -->
+        <div class="glass-card p-8 border-emerald-500/30 space-y-5 bg-[#0D1524] ring-1 ring-emerald-500/30">
+          <div class="flex items-center justify-between">
+            <span class="text-sm font-bold text-emerald-400 uppercase tracking-wider">LAUNCH AI SaaS Suite</span>
+            <span class="text-xs bg-emerald-500/10 text-emerald-300 px-3 py-1 rounded-full border border-emerald-500/20 font-bold">Autonomous</span>
+          </div>
+          <ul class="space-y-3.5 text-xs text-slate-200">
+            <li class="flex items-start gap-3">
+              <span class="text-emerald-400 font-bold text-sm">✓</span>
+              <span><strong>~6 Seconds Synthesis:</strong> Generates 100% brand-new 8K visuals via Latent Turbo Diffusion.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="text-emerald-400 font-bold text-sm">✓</span>
+              <span><strong>Automated Regulatory Rule Engine:</strong> Instantly audits 6 TRAI compliance criteria with 0–100% scoring.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="text-emerald-400 font-bold text-sm">✓</span>
+              <span><strong>Locked Brand Design Tokens:</strong> Enforces exact Jio blue (#0A2885), Airtel red (#E40000), and official typography.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="text-emerald-400 font-bold text-sm">✓</span>
+              <span><strong>Zero Cost Architecture:</strong> Unmetered serverless diffusion with zero per-image token billing.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="text-xs text-slate-500 border-t border-white/10 pt-4 flex justify-between">
+        <span>Slide 03 / 12</span>
+        <span>Value Proposition • Competitive Analysis</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 4: Competitive Comparison With Other AI Apps -->
+    <div class="slide flex-col justify-between p-12 lg:p-16">
+      <div>
+        <div class="text-xs uppercase font-bold text-purple-400 tracking-widest">Market Differentiation</div>
+        <h2 class="text-4xl lg:text-5xl font-black text-white mt-1">Why LAUNCH AI vs. General AI Apps?</h2>
+        <p class="text-slate-400 text-sm mt-2">Why generic AI generators (Midjourney, Canva, DALL-E) fail for enterprise telecom marketing:</p>
+      </div>
+
+      <div class="overflow-x-auto my-auto">
+        <table class="w-full text-left text-xs text-slate-300 glass-card border border-white/10 overflow-hidden">
+          <thead class="bg-[#121828] text-white uppercase text-[11px] font-bold border-b border-white/10">
+            <tr>
+              <th class="p-4">Capability</th>
+              <th class="p-4 text-purple-400 font-black">LAUNCH AI (Our Platform)</th>
+              <th class="p-4 text-slate-400">Midjourney / DALL-E 3</th>
+              <th class="p-4 text-slate-400">Canva Magic Studio</th>
+              <th class="p-4 text-slate-400">Adobe Firefly</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-white/5">
+            <tr class="bg-purple-500/5">
+              <td class="p-4 font-bold text-white">Telecom Regulatory Audit (TRAI)</td>
+              <td class="p-4 text-emerald-400 font-bold">✓ Automated 6-Point Engine</td>
+              <td class="p-4 text-red-400">✕ None</td>
+              <td class="p-4 text-red-400">✕ None</td>
+              <td class="p-4 text-red-400">✕ None</td>
+            </tr>
+            <tr>
+              <td class="p-4 font-bold text-white">Generation Cost & Limits</td>
+              <td class="p-4 text-emerald-400 font-bold">✓ 100% Free & Unmetered</td>
+              <td class="p-4 text-amber-400">Paid ($30-$60/mo)</td>
+              <td class="p-4 text-amber-400">Paid Enterprise Plan</td>
+              <td class="p-4 text-amber-400">Paid Monthly Credits</td>
+            </tr>
+            <tr class="bg-purple-500/5">
+              <td class="p-4 font-bold text-white">Canvas Editor with Brand Badges</td>
+              <td class="p-4 text-emerald-400 font-bold">✓ Native HTML5 Canvas</td>
+              <td class="p-4 text-red-400">✕ None (Raw images only)</td>
+              <td class="p-4 text-emerald-400">✓ Manual Drag & Drop</td>
+              <td class="p-4 text-amber-400">Heavy Desktop App</td>
+            </tr>
+            <tr>
+              <td class="p-4 font-bold text-white">Telecom Multi-Aspect Ratios</td>
+              <td class="p-4 text-emerald-400 font-bold">✓ 1:1, 9:16, 16:9 Built-in</td>
+              <td class="p-4 text-amber-400">Manual aspect ratio flags</td>
+              <td class="p-4 text-emerald-400">✓ Resizing options</td>
+              <td class="p-4 text-amber-400">Manual sizing</td>
+            </tr>
+            <tr class="bg-purple-500/5">
+              <td class="p-4 font-bold text-white">Enterprise Role Governance (RBAC)</td>
+              <td class="p-4 text-emerald-400 font-bold">✓ Admin / Brand Mgr / Designer</td>
+              <td class="p-4 text-red-400">✕ Single User Account</td>
+              <td class="p-4 text-slate-400">Basic Team Share</td>
+              <td class="p-4 text-slate-400">Cloud Library Share</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="text-xs text-slate-500 border-t border-white/10 pt-4 flex justify-between">
+        <span>Slide 04 / 12</span>
+        <span>Feature Matrix • Competitive Evaluation</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 5: System Architecture -->
+    <div class="slide flex-col justify-between p-12 lg:p-16">
+      <div>
+        <div class="text-xs uppercase font-bold text-purple-400 tracking-widest">Engineering Blueprint</div>
+        <h2 class="text-4xl lg:text-5xl font-black text-white mt-1">Full-Stack System Architecture</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 my-auto">
+        <div class="glass-card p-6 border-purple-500/30 space-y-3 bg-[#0E1322]">
+          <div class="w-12 h-12 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-2xl font-bold">
+            💻
+          </div>
+          <div class="text-xs font-bold text-purple-400 uppercase tracking-wider">Frontend Client</div>
+          <h3 class="text-lg font-bold text-white">Next.js 14 App Router</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Server-side rendering, React 18 client state, Tailwind CSS dark tokens, and responsive canvas staging.
+          </p>
+        </div>
+
+        <div class="glass-card p-6 border-blue-500/30 space-y-3 bg-[#0E1322]">
+          <div class="w-12 h-12 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center text-2xl font-bold">
+            ⚡
+          </div>
+          <div class="text-xs font-bold text-blue-400 uppercase tracking-wider">REST API Gateway</div>
+          <h3 class="text-lg font-bold text-white">FastAPI (Python 3.10)</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Asynchronous endpoints (`asyncio`), Pydantic validation, JWT OAuth2 authentication, and static asset serving.
+          </p>
+        </div>
+
+        <div class="glass-card p-6 border-emerald-500/30 space-y-3 bg-[#0E1322]">
+          <div class="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-2xl font-bold">
+            🧠
+          </div>
+          <div class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Diffusion Engine</div>
+          <h3 class="text-lg font-bold text-white">Latent Turbo Diffusion</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Serverless visual generation pipeline with buffer verification, seed control, and anti-CORS taint local caching.
+          </p>
+        </div>
+
+        <div class="glass-card p-6 border-amber-500/30 space-y-3 bg-[#0E1322]">
+          <div class="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-2xl font-bold">
+            🗄️
+          </div>
+          <div class="text-xs font-bold text-amber-400 uppercase tracking-wider">Relational Data</div>
+          <h3 class="text-lg font-bold text-white">SQLite + SQLAlchemy</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            ACID transaction data store for telecom plans, campaign assets, user credentials, and regulatory audit trails.
+          </p>
+        </div>
+      </div>
+
+      <div class="text-xs text-slate-500 border-t border-white/10 pt-4 flex justify-between">
+        <span>Slide 05 / 12</span>
+        <span>Architecture • Distributed Micro-Components</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 6: Four Core Modules -->
+    <div class="slide flex-col justify-between p-12 lg:p-16">
+      <div>
+        <div class="text-xs uppercase font-bold text-purple-400 tracking-widest">Platform Functionality</div>
+        <h2 class="text-4xl lg:text-5xl font-black text-white mt-1">Four Core Modules</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-auto">
+        <div class="glass-card p-6 border-white/10 space-y-3 bg-[#0D121F]">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">🎨</span>
+            <h3 class="text-lg font-bold text-white">1. AI Visual Diffusion Studio</h3>
+          </div>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Generates high-resolution commercial visuals from natural language prompts. Features 8 one-click telecom presets (SpaceFiber, AR Glasses, Autonomous Vehicle, Cricket Stadium, Bullet Train) with custom seed re-roll capabilities.
+          </p>
+        </div>
+
+        <div class="glass-card p-6 border-white/10 space-y-3 bg-[#0D121F]">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">✏️</span>
+            <h3 class="text-lg font-bold text-white">2. Interactive Canvas Editor</h3>
+          </div>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Hardware-accelerated HTML5 Canvas engine. Automatically mounts generated AI backgrounds, allowing marketers to stamp official Jio/Airtel brand badges, plan pricing tags, and legal disclaimers with instant PNG/JPEG export.
+          </p>
+        </div>
+
+        <div class="glass-card p-6 border-white/10 space-y-3 bg-[#0D121F]">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">⚖️</span>
+            <h3 class="text-lg font-bold text-white">3. TRAI Regulatory Compliance Validator</h3>
+          </div>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Programmatic legal auditing engine. Verifies 6 essential consumer protection benchmarks (pricing, GST, FUP data caps, post-FUP speed, validity, asterisk disclaimers) and scores campaign compliance from 0 to 100%.
+          </p>
+        </div>
+
+        <div class="glass-card p-6 border-white/10 space-y-3 bg-[#0D121F]">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">🛡️</span>
+            <h3 class="text-lg font-bold text-white">4. Enterprise RBAC & Governance Hub</h3>
+          </div>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Stateless JWT-authenticated access governance. Allows Administrators, Brand Managers, and Designers to collaborate, review campaign drafts, enforce brand design tokens, and approve ads before publication.
+          </p>
+        </div>
+      </div>
+
+      <div class="text-xs text-slate-500 border-t border-white/10 pt-4 flex justify-between">
+        <span>Slide 06 / 12</span>
+        <span>Functional Decomposition • Core Modules</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 7: AI Diffusion Pipeline & Anti-CORS Solution -->
+    <div class="slide flex-col justify-between p-12 lg:p-16">
+      <div>
+        <div class="text-xs uppercase font-bold text-emerald-400 tracking-widest">Engineering Depth</div>
+        <h2 class="text-4xl lg:text-5xl font-black text-white mt-1">Generative AI Pipeline & Key Innovations</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-auto">
+        <div class="glass-card p-6 space-y-4 border-white/10 bg-[#0E121E]">
+          <div class="text-2xl">🧠</div>
+          <h3 class="text-base font-bold text-white">1. Prompt Denoising</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Natural language prompts are mapped into latent space representations and synthesized via multi-step latent diffusion into brand-new 768x768 / 1024x1024 visuals in ~6 seconds.
+          </p>
+        </div>
+
+        <div class="glass-card p-6 space-y-4 border-purple-500/30 bg-[#0E121E]">
+          <div class="text-2xl">🛡️</div>
+          <h3 class="text-base font-bold text-white">2. Anti-CORS Local Cache</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            To prevent the browser's "Tainted Canvas" security error on export, the FastAPI backend downloads the visual and stores it in `./storage/generated/`, serving it from the same origin.
+          </p>
+        </div>
+
+        <div class="glass-card p-6 space-y-4 border-white/10 bg-[#0E121E]">
+          <div class="text-2xl">⚡</div>
+          <h3 class="text-base font-bold text-white">3. Single-Slot Architecture</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Eliminated concurrent multi-image requests that caused IP throttling. Generates 1 high-fidelity visual with an instant "Re-roll" capability for unlimited creative iteration.
+          </p>
+        </div>
+      </div>
+
+      <div class="text-xs text-slate-500 border-t border-white/10 pt-4 flex justify-between">
+        <span>Slide 07 / 12</span>
+        <span>Technical Innovations • AI Pipeline</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 8: TRAI Regulatory Compliance Engine -->
+    <div class="slide flex-col justify-between p-12 lg:p-16">
+      <div>
+        <div class="text-xs uppercase font-bold text-amber-400 tracking-widest">Regulatory Governance</div>
+        <h2 class="text-4xl lg:text-5xl font-black text-white mt-1">TRAI Compliance Audit Engine</h2>
+        <p class="text-slate-400 text-sm mt-2">How LAUNCH AI protects telecoms from multimillion-rupee regulatory violations:</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5 my-auto">
+        <div class="glass-card p-5 border-white/10 space-y-2">
+          <div class="text-xs font-bold text-purple-400">Rule 01</div>
+          <h4 class="text-sm font-bold text-white">Plan Name & Category</h4>
+          <p class="text-[11px] text-slate-400">Verifies clear classification (e.g. "5G Prepaid") without deceptive promotional naming.</p>
+        </div>
+
+        <div class="glass-card p-5 border-white/10 space-y-2">
+          <div class="text-xs font-bold text-purple-400">Rule 02</div>
+          <h4 class="text-sm font-bold text-white">Price Transparency</h4>
+          <p class="text-[11px] text-slate-400">Ensures tariffs explicitly mention whether 18% GST is included or extra to prevent hidden fees.</p>
+        </div>
+
+        <div class="glass-card p-5 border-white/10 space-y-2">
+          <div class="text-xs font-bold text-purple-400">Rule 03</div>
+          <h4 class="text-sm font-bold text-white">FUP Limit Disclosures</h4>
+          <p class="text-[11px] text-slate-400">Enforces daily quota and reduced post-FUP speed (e.g., 64 Kbps) disclosures under TRAI mandates.</p>
+        </div>
+
+        <div class="glass-card p-5 border-white/10 space-y-2">
+          <div class="text-xs font-bold text-purple-400">Rule 04</div>
+          <h4 class="text-sm font-bold text-white">Validity Duration</h4>
+          <p class="text-[11px] text-slate-400">Mandates exact billing cycle disclosure (28 days vs 30 days monthly billing transparency).</p>
+        </div>
+
+        <div class="glass-card p-5 border-white/10 space-y-2">
+          <div class="text-xs font-bold text-purple-400">Rule 05</div>
+          <h4 class="text-sm font-bold text-white">Asterisk Disclaimer Presence</h4>
+          <p class="text-[11px] text-slate-400">Audits legibility and font contrast of the mandatory fine-print asterisk disclaimer footer.</p>
+        </div>
+
+        <div class="glass-card p-5 border-white/10 space-y-2">
+          <div class="text-xs font-bold text-purple-400">Rule 06</div>
+          <h4 class="text-sm font-bold text-white">Aspect Ratio Dimensions</h4>
+          <p class="text-[11px] text-slate-400">Validates that canvas dimensions match approved channel ratios without squashing or distortion.</p>
+        </div>
+      </div>
+
+      <div class="text-xs text-slate-500 border-t border-white/10 pt-4 flex justify-between">
+        <span>Slide 08 / 12</span>
+        <span>Regulatory Intelligence • Legal Engine</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 9: Tech Stack Breakdown -->
+    <div class="slide flex-col justify-between p-12 lg:p-16">
+      <div>
+        <div class="text-xs uppercase font-bold text-purple-400 tracking-widest">Technology Stack</div>
+        <h2 class="text-4xl lg:text-5xl font-black text-white mt-1">Comprehensive Tech Stack</h2>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 my-auto">
+        <div class="glass-card p-6 border-white/10 space-y-3 bg-[#0D121F]">
+          <div class="text-xs font-bold text-slate-400 uppercase">Frontend</div>
+          <div class="text-xl font-bold text-white">Next.js 14</div>
+          <div class="text-xs text-slate-400">React 18, Tailwind CSS, Lucide Icons, App Router</div>
+        </div>
+
+        <div class="glass-card p-6 border-white/10 space-y-3 bg-[#0D121F]">
+          <div class="text-xs font-bold text-slate-400 uppercase">Backend API</div>
+          <div class="text-xl font-bold text-white">FastAPI</div>
+          <div class="text-xs text-slate-400">Python 3.10+, Uvicorn, Pydantic v2, Asyncio</div>
+        </div>
+
+        <div class="glass-card p-6 border-white/10 space-y-3 bg-[#0D121F]">
+          <div class="text-xs font-bold text-slate-400 uppercase">Database</div>
+          <div class="text-xl font-bold text-white">SQLite + SQLAlchemy</div>
+          <div class="text-xs text-slate-400">SQLAlchemy 2.0 ORM, ACID-Compliant Storage</div>
+        </div>
+
+        <div class="glass-card p-6 border-white/10 space-y-3 bg-[#0D121F]">
+          <div class="text-xs font-bold text-slate-400 uppercase">AI Pipeline</div>
+          <div class="text-xl font-bold text-white">Turbo Diffusion</div>
+          <div class="text-xs text-slate-400">Latent Visual Diffusion, Seed Generation, Pillow</div>
+        </div>
+      </div>
+
+      <div class="text-xs text-slate-500 border-t border-white/10 pt-4 flex justify-between">
+        <span>Slide 09 / 12</span>
+        <span>Technology Ecosystem • Libraries & Tools</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 10: Performance Results & Metrics -->
+    <div class="slide flex-col justify-between p-12 lg:p-16">
+      <div>
+        <div class="text-xs uppercase font-bold text-emerald-400 tracking-widest">Empirical Evaluation</div>
+        <h2 class="text-4xl lg:text-5xl font-black text-white mt-1">Platform Results & Benchmarks</h2>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 my-auto">
+        <div class="glass-card p-8 text-center border-purple-500/20 bg-[#0E121E]">
+          <div class="text-4xl lg:text-5xl font-black text-purple-400 font-mono">~6.2s</div>
+          <div class="text-xs font-bold text-white mt-2">Generation Latency</div>
+          <div class="text-[11px] text-slate-400 mt-1">From text prompt to rendered visual</div>
+        </div>
+
+        <div class="glass-card p-8 text-center border-emerald-500/20 bg-[#0E121E]">
+          <div class="text-4xl lg:text-5xl font-black text-emerald-400 font-mono">100%</div>
+          <div class="text-xs font-bold text-white mt-2">TRAI Audit Accuracy</div>
+          <div class="text-[11px] text-slate-400 mt-1">Catches all missing legal disclosures</div>
+        </div>
+
+        <div class="glass-card p-8 text-center border-blue-500/20 bg-[#0E121E]">
+          <div class="text-4xl lg:text-5xl font-black text-blue-400 font-mono">₹0 / $0</div>
+          <div class="text-xs font-bold text-white mt-2">API Cost Per Image</div>
+          <div class="text-[11px] text-slate-400 mt-1">100% free serverless architecture</div>
+        </div>
+
+        <div class="glass-card p-8 text-center border-amber-500/20 bg-[#0E121E]">
+          <div class="text-4xl lg:text-5xl font-black text-amber-400 font-mono">3 Formats</div>
+          <div class="text-xs font-bold text-white mt-2">Multi-Channel Support</div>
+          <div class="text-[11px] text-slate-400 mt-1">1:1 Feed • 9:16 Story • 16:9 Billboard</div>
+        </div>
+      </div>
+
+      <div class="text-xs text-slate-500 border-t border-white/10 pt-4 flex justify-between">
+        <span>Slide 10 / 12</span>
+        <span>Quantitative Performance • Real Benchmarks</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 11: Future Roadmap -->
+    <div class="slide flex-col justify-between p-12 lg:p-16">
+      <div>
+        <div class="text-xs uppercase font-bold text-purple-400 tracking-widest">Looking Ahead</div>
+        <h2 class="text-4xl lg:text-5xl font-black text-white mt-1">Future Scope & Roadmap</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-auto">
+        <div class="glass-card p-6 space-y-3 border-white/10 bg-[#0E121E]">
+          <div class="text-2xl">🎯</div>
+          <h3 class="text-base font-bold text-white">1. Custom LoRA Brand Weights</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Fine-tune low-rank adaptation (LoRA) diffusion weights on official 3D telecom mascots and physical device renders for micro-precision brand placement.
+          </p>
+        </div>
+
+        <div class="glass-card p-6 space-y-3 border-white/10 bg-[#0E121E]">
+          <div class="text-2xl">🚀</div>
+          <h3 class="text-base font-bold text-white">2. Meta & Google Ads Direct Publish</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Direct API webhooks connecting approved canvas banners straight into Meta Ads Manager and Google Ads campaigns with 1-click live publishing.
+          </p>
+        </div>
+
+        <div class="glass-card p-6 space-y-3 border-white/10 bg-[#0E121E]">
+          <div class="text-2xl">🌐</div>
+          <h3 class="text-base font-bold text-white">3. Multi-Lingual Regional Banners</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Automated translation of plan benefits and disclaimers into Hindi, Telugu, Tamil, and Bengali typography for pan-India localized campaigns.
+          </p>
+        </div>
+      </div>
+
+      <div class="text-xs text-slate-500 border-t border-white/10 pt-4 flex justify-between">
+        <span>Slide 11 / 12</span>
+        <span>Future Work • Research Extensions</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 12: Conclusion & Q&A -->
+    <div class="slide flex-col justify-between p-12 lg:p-16 text-center">
+      <div></div>
+      
+      <div class="max-w-2xl mx-auto space-y-6">
+        <div class="w-16 h-16 rounded-2xl gradient-btn-purple mx-auto flex items-center justify-center text-3xl font-black shadow-xl shadow-purple-500/20">
+          ✓
+        </div>
+        <h2 class="text-5xl font-black text-white">Thank You!</h2>
+        <p class="text-slate-400 text-sm leading-relaxed">
+          <strong>LAUNCH AI</strong> bridges the critical gap between cutting-edge visual diffusion models and enterprise regulatory compliance in Indian telecommunications.
+        </p>
+        <div class="pt-4">
+          <div class="inline-block px-6 py-2.5 rounded-xl bg-purple-500/10 border border-purple-500/30 text-purple-300 font-bold text-sm">
+            Ready for Viva Defense & Questions
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-between items-center border-t border-white/10 pt-6 text-xs text-slate-500">
+        <span>Ramya Deepika Kudelli • Lead Architect</span>
+        <span>LAUNCH AI Project Defense • 2026</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Navigation Control Bar -->
+  <div class="fixed bottom-6 right-8 flex items-center gap-3 z-50 bg-[#0D121F]/90 backdrop-blur-md border border-white/10 px-4 py-2 rounded-2xl shadow-2xl">
+    <button onclick="prevSlide()" class="p-2 hover:bg-white/10 rounded-xl text-slate-300 hover:text-white transition font-bold text-xs flex items-center gap-1">
+      ← Prev
+    </button>
+    <span id="slide-indicator" class="text-xs font-mono font-bold text-purple-400 px-2">1 / 12</span>
+    <button onclick="nextSlide()" class="p-2 hover:bg-white/10 rounded-xl text-slate-300 hover:text-white transition font-bold text-xs flex items-center gap-1">
+      Next →
+    </button>
+    <button onclick="toggleFullscreen()" title="Toggle Fullscreen (F11)" class="p-2 hover:bg-white/10 rounded-xl text-slate-400 hover:text-white text-xs">
+      ⛶
+    </button>
+  </div>
+
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const indicator = document.getElementById('slide-indicator');
+
+    function showSlide(index) {
+      if (index < 0) index = 0;
+      if (index >= slides.length) index = slides.length - 1;
+
+      slides.forEach((s, idx) => {
+        s.classList.toggle('active', idx === index);
+      });
+      currentSlide = index;
+      indicator.textContent = `${currentSlide + 1} / ${slides.length}`;
+    }
+
+    function nextSlide() {
+      showSlide(currentSlide + 1);
+    }
+
+    function prevSlide() {
+      showSlide(currentSlide - 1);
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    }
+
+    // Keyboard navigation
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        prevSlide();
+      } else if (e.key === 'Home') {
+        showSlide(0);
+      } else if (e.key === 'End') {
+        showSlide(slides.length - 1);
+      }
+    });
+  </script>
+</body>
+</html>
