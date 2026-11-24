@@ -86,8 +86,8 @@ export default function GeneratorPage() {
     const randomSeed = Math.floor(Math.random() * 900000) + 10000;
 
     try {
-      const apiEndpoint = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api") + "/generation/free";
-      const res = await fetch(apiEndpoint, {
+      const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
+      const res = await fetch(`${API_BASE}/generation/free`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -99,7 +99,10 @@ export default function GeneratorPage() {
       });
 
       const data = await res.json();
-      const imageUrl = data.image_url || `https://image.pollinations.ai/prompt/${encodeURIComponent(activePrompt)}?model=turbo&width=${width}&height=${height}&nologo=true&seed=${randomSeed}`;
+      let imageUrl = data.image_url;
+      if (!imageUrl || imageUrl.includes("localhost:8000")) {
+        imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(activePrompt)}?model=turbo&width=${width}&height=${height}&nologo=true&seed=${data.seed || randomSeed}`;
+      }
 
       setCurrentImage({
         seed: data.seed || randomSeed,
@@ -309,6 +312,13 @@ export default function GeneratorPage() {
             <img
               src={currentImage.url}
               alt="Generated Campaign Visual"
+              onError={(e) => {
+                const target = e.currentTarget;
+                const cloudFallback = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?model=turbo&width=768&height=768&nologo=true&seed=${currentImage.seed}`;
+                if (target.src !== cloudFallback) {
+                  target.src = cloudFallback;
+                }
+              }}
               className={`w-full h-full object-contain max-h-[540px] transition duration-300 ${
                 isGenerating ? "opacity-30 blur-sm scale-95" : "opacity-100 scale-100"
               }`}

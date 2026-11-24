@@ -1,4 +1,4 @@
-import os
+﻿import os
 import uuid
 import random
 import urllib.request
@@ -62,7 +62,7 @@ def generate_free_ai_image(req: FreeGenRequest):
 
         return {
             "success": True,
-            "image_url": f"http://localhost:8000/storage/generated/{filename}",
+            "image_url": poll_url,
             "seed": seed,
             "filename": filename,
             "is_ai": True
