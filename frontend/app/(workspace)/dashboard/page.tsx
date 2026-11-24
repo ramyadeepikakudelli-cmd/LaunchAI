@@ -118,7 +118,7 @@ export default function DashboardPage() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-[#0D121F] border border-white/[0.06] p-5 rounded-2xl">
         <div>
           <h1 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight flex flex-wrap items-center gap-2">
-            <span>Welcome, {isAdmin ? "Ramya Deepika Kudelli" : (user?.full_name || "Designer")}</span>
+            <span>Welcome, {user?.full_name || "Creator"}</span>
             <span className={`text-xs px-2.5 py-0.5 rounded-full font-bold border ${
               isAdmin
                 ? 'bg-purple-500/20 text-purple-300 border-purple-500/30'

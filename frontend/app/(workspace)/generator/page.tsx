@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 
 export interface GeneratedImage {
@@ -22,14 +22,58 @@ export default function GeneratorPage() {
   const [successNotice, setSuccessNotice] = useState("");
   const [generationCount, setGenerationCount] = useState(1);
 
+  // 45-Second Rate Limit Cooldown State
+  const [cooldown, setCooldown] = useState(0);
+  const [autoGenerateOnZero, setAutoGenerateOnZero] = useState(false);
+  const cooldownRef = useRef(cooldown);
+  cooldownRef.current = cooldown;
+
   // Single Focused Hero Image state
-  const [currentImage, setCurrentImage] = useState<GeneratedImage>({
+  const defaultStudioImage: GeneratedImage = {
     seed: 48920,
     theme: "Rooftop Twilight AR Glasses 5G Streaming",
     url: "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=1200&h=1200&q=85",
     isAi: false,
     prompt: "Cinematic commercial telecom visual for ultra-fast 5G True Unlimited network..."
-  });
+  };
+
+  const [currentImage, setCurrentImage] = useState<GeneratedImage>(defaultStudioImage);
+
+  // Initialize and track cooldown from localStorage
+  useEffect(() => {
+    try {
+      const savedTime = localStorage.getItem('launch_ai_last_gen_timestamp');
+      if (savedTime) {
+        const elapsed = Math.floor((Date.now() - Number(savedTime)) / 1000);
+        if (elapsed < 45 && elapsed >= 0) {
+          setCooldown(45 - elapsed);
+        }
+      }
+    } catch (e) {}
+  }, []);
+
+  // 1-second interval timer for cooldown
+  useEffect(() => {
+    if (cooldown <= 0) return;
+
+    const timer = setInterval(() => {
+      setCooldown((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          setSuccessNotice("✨ 45s Cooldown complete! AI diffusion engine is ready for your next creative.");
+          if (autoGenerateOnZero) {
+            setTimeout(() => {
+              handleGenerateAI();
+            }, 300);
+          }
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [cooldown, autoGenerateOnZero]);
 
   const presets = [
     {
@@ -66,8 +110,14 @@ export default function GeneratorPage() {
     }
   ];
 
-  // 100% Free AI Image Generation Handler (Pollinations Turbo Engine)
+  // 100% Free AI Image Generation Handler (Pollinations Turbo Engine with 45s Guard)
   const handleGenerateAI = async (customPrompt?: string) => {
+    // If cooldown is running, show countdown notice
+    if (cooldown > 0) {
+      setGenError(`⏳ Cooldown in progress: Please wait ${cooldown}s for Pollinations Turbo to recharge.`);
+      return;
+    }
+
     const activePrompt = (customPrompt || prompt).trim();
     setGenError("");
     setSuccessNotice("");
@@ -84,6 +134,12 @@ export default function GeneratorPage() {
     }
 
     const randomSeed = Math.floor(Math.random() * 900000) + 10000;
+
+    // Start 45-second timer immediately to prevent accidental duplicate requests
+    try {
+      localStorage.setItem('launch_ai_last_gen_timestamp', String(Date.now()));
+    } catch (e) {}
+    setCooldown(45);
 
     try {
       const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
@@ -111,7 +167,7 @@ export default function GeneratorPage() {
         isAi: true,
         prompt: activePrompt
       });
-      setSuccessNotice(`✨ Synthesized brand-new AI creative (Seed #${data.seed || randomSeed})!`);
+      setSuccessNotice(`✨ Synthesized brand-new AI creative (Seed #${data.seed || randomSeed})! 45s recharge cooldown started.`);
       setGenerationCount(c => c + 1);
     } catch (err: any) {
       // Direct high-res cloud stream fallback
@@ -123,7 +179,7 @@ export default function GeneratorPage() {
         isAi: true,
         prompt: activePrompt
       });
-      setSuccessNotice(`✨ Generated real AI visual (Direct Cloud Stream)!`);
+      setSuccessNotice(`✨ Generated real AI visual (Direct Cloud Stream)! 45s recharge cooldown started.`);
       setGenerationCount(c => c + 1);
     } finally {
       setIsGenerating(false);
@@ -131,8 +187,27 @@ export default function GeneratorPage() {
   };
 
   const handleApplyPreset = (p: typeof presets[0]) => {
+    if (cooldown > 0) {
+      setGenError(`⏳ Cooldown active! Next preset ready in ${cooldown} seconds.`);
+      return;
+    }
     setPrompt(p.prompt);
     handleGenerateAI(p.prompt);
+  };
+
+  // Force trigger the 45s cooldown (e.g. if rate limit image is encountered)
+  const handleTriggerRateLimitCountdown = () => {
+    try {
+      localStorage.setItem('launch_ai_last_gen_timestamp', String(Date.now()));
+    } catch (e) {}
+    setCooldown(45);
+    setGenError("");
+    setSuccessNotice("⏳ 45-second cooldown started! When the timer ends, the AI generator will unlock.");
+  };
+
+  const handleResetToCleanStudio = () => {
+    setCurrentImage(defaultStudioImage);
+    setSuccessNotice("📸 Restored clean 8K studio preview banner.");
   };
 
   return (
@@ -153,17 +228,31 @@ export default function GeneratorPage() {
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-xs text-purple-400 bg-purple-500/10 border border-purple-500/20 px-3 py-1.5 rounded-xl font-bold font-mono">
-            Generation #{generationCount} • Active Seed #{currentImage.seed}
-          </span>
+          {cooldown > 0 ? (
+            <div className="flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs px-3.5 py-1.5 rounded-xl font-bold font-mono">
+              <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+              <span>Recharging: {cooldown}s remaining</span>
+            </div>
+          ) : (
+            <span className="text-xs text-purple-400 bg-purple-500/10 border border-purple-500/20 px-3 py-1.5 rounded-xl font-bold font-mono">
+              Generation #{generationCount} • Active Seed #{currentImage.seed}
+            </span>
+          )}
         </div>
       </div>
 
       {/* 1-Click Presets Bar */}
       <div className="bg-[#0D121F] border border-white/[0.06] p-4 rounded-2xl space-y-2.5">
-        <div className="text-[11px] uppercase tracking-wider font-bold text-gray-400 flex items-center gap-2">
-          <span>⚡</span>
-          <span>1-Click Telecom Art Direction Presets (Click to Auto-Generate AI Visual)</span>
+        <div className="text-[11px] uppercase tracking-wider font-bold text-gray-400 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span>⚡</span>
+            <span>1-Click Telecom Art Direction Presets (Click to Auto-Generate AI Visual)</span>
+          </div>
+          {cooldown > 0 && (
+            <span className="text-amber-400 font-mono text-[10px] font-bold">
+              Cooldown: {cooldown}s
+            </span>
+          )}
         </div>
 
         <div className="flex flex-wrap gap-2">
@@ -171,7 +260,12 @@ export default function GeneratorPage() {
             <button
               key={idx}
               onClick={() => handleApplyPreset(p)}
-              className="text-xs py-1.5 px-3 rounded-xl border border-white/5 bg-[#121828] text-gray-300 hover:text-white hover:border-purple-500/50 hover:bg-purple-500/10 transition font-medium cursor-pointer"
+              disabled={isGenerating || cooldown > 0}
+              className={`text-xs py-1.5 px-3 rounded-xl border transition font-medium cursor-pointer ${
+                cooldown > 0
+                  ? "border-white/5 bg-[#101420] text-gray-500 cursor-not-allowed opacity-60"
+                  : "border-white/5 bg-[#121828] text-gray-300 hover:text-white hover:border-purple-500/50 hover:bg-purple-500/10"
+              }`}
             >
               {p.name}
             </button>
@@ -185,11 +279,21 @@ export default function GeneratorPage() {
         {/* Left Column: Prompt & Controls */}
         <div className="lg:col-span-5 bg-[#0D121F] border border-white/[0.06] p-6 rounded-2xl shadow-xl space-y-4">
           
-          {/* Status Message */}
+          {/* Status Messages */}
           {genError && (
             <div className="p-3 bg-red-500/10 border border-red-500/30 text-red-300 text-xs rounded-xl flex items-start gap-2">
               <span>⚠️</span>
-              <span>{genError}</span>
+              <div className="flex-1">
+                <span>{genError}</span>
+                {cooldown === 0 && (
+                  <button
+                    onClick={handleTriggerRateLimitCountdown}
+                    className="block mt-1.5 text-amber-300 underline font-bold hover:text-white"
+                  >
+                    Click to start 45s cooldown countdown ⏱️
+                  </button>
+                )}
+              </div>
             </div>
           )}
           {successNotice && (
@@ -222,8 +326,9 @@ export default function GeneratorPage() {
               <label className="block text-[11px] font-semibold text-gray-400 mb-1">
                 AI Engine
               </label>
-              <div className="w-full bg-[#121828] border border-white/10 rounded-xl p-2.5 text-xs text-white font-medium flex items-center gap-1.5">
-                <span>⚡</span> Turbo Diffusion (Free)
+              <div className="w-full bg-[#121828] border border-white/10 rounded-xl p-2.5 text-xs text-white font-medium flex items-center justify-between">
+                <span>⚡ Turbo Diffusion</span>
+                <span className="text-[10px] text-emerald-400 font-bold">Free</span>
               </div>
             </div>
 
@@ -241,17 +346,28 @@ export default function GeneratorPage() {
             </div>
           </div>
 
-          {/* Action Buttons */}
+          {/* Action Buttons with 45s Cooldown */}
           <div className="space-y-2.5 pt-2">
+            
+            {/* Main Generate Button */}
             <button
               onClick={() => handleGenerateAI()}
-              disabled={isGenerating}
-              className="w-full py-3.5 rounded-xl font-bold text-white text-xs flex items-center justify-center gap-2 shadow-lg gradient-btn-purple transition disabled:opacity-50 cursor-pointer"
+              disabled={isGenerating || cooldown > 0}
+              className={`w-full py-3.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow-lg transition ${
+                cooldown > 0
+                  ? "bg-[#161F33] border-2 border-amber-500/40 text-amber-300 cursor-not-allowed"
+                  : "gradient-btn-purple text-white cursor-pointer hover:shadow-purple-600/40"
+              } disabled:opacity-85`}
             >
               {isGenerating ? (
                 <>
                   <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                   <span>Synthesizing Brand-New AI Creative...</span>
+                </>
+              ) : cooldown > 0 ? (
+                <>
+                  <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+                  <span>⏳ Free Limit Cooldown: Ready in {cooldown}s</span>
                 </>
               ) : (
                 <>
@@ -260,23 +376,68 @@ export default function GeneratorPage() {
               )}
             </button>
 
+            {/* Re-roll Button */}
             <button
               onClick={() => handleGenerateAI()}
-              disabled={isGenerating}
-              className="w-full py-2.5 rounded-xl font-semibold text-gray-300 hover:text-white text-xs flex items-center justify-center gap-2 bg-[#121828] hover:bg-[#182238] border border-white/10 transition disabled:opacity-50 cursor-pointer"
+              disabled={isGenerating || cooldown > 0}
+              className={`w-full py-2.5 rounded-xl font-semibold text-xs flex items-center justify-center gap-2 border transition ${
+                cooldown > 0
+                  ? "bg-[#101420] border-white/5 text-gray-500 cursor-not-allowed"
+                  : "bg-[#121828] hover:bg-[#182238] border-white/10 text-gray-300 hover:text-white cursor-pointer"
+              }`}
             >
-              <span>🎲 Re-roll / Generate Another Variant</span>
+              {cooldown > 0 ? (
+                <span>🎲 Re-roll Locked ({cooldown}s)</span>
+              ) : (
+                <span>🎲 Re-roll / Generate Another Variant</span>
+              )}
             </button>
+
+            {/* Auto-generate checkbox option when cooldown hits 0 */}
+            {cooldown > 0 && (
+              <label className="flex items-center gap-2 text-[11px] text-gray-300 bg-[#121828] border border-white/5 p-2 rounded-xl cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={autoGenerateOnZero}
+                  onChange={(e) => setAutoGenerateOnZero(e.target.checked)}
+                  className="rounded text-purple-600 focus:ring-0 cursor-pointer"
+                />
+                <span>⚡ Auto-synthesize new image the moment timer hits 0s</span>
+              </label>
+            )}
+
+            {/* Cooldown progress indicator */}
+            {cooldown > 0 && (
+              <div className="space-y-1 pt-1">
+                <div className="flex justify-between text-[10px] text-gray-400 font-mono">
+                  <span>Recharging Free Slot</span>
+                  <span className="text-amber-400 font-bold">{cooldown}s left</span>
+                </div>
+                <div className="w-full bg-white/10 rounded-full h-1.5 overflow-hidden">
+                  <div
+                    className="bg-gradient-to-r from-purple-500 via-pink-500 to-amber-400 h-full transition-all duration-1000"
+                    style={{ width: `${((45 - cooldown) / 45) * 100}%` }}
+                  ></div>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="p-3 bg-[#121828] border border-white/5 rounded-xl text-[11px] text-gray-400 space-y-1">
-            <div className="text-white font-semibold flex items-center gap-1.5">
-              <span>💡</span> How it works:
+            <div className="text-white font-semibold flex items-center justify-between">
+              <span className="flex items-center gap-1.5">
+                <span>💡</span> Free Tier Rate Limit Policy:
+              </span>
+              <button
+                type="button"
+                onClick={handleTriggerRateLimitCountdown}
+                className="text-[10px] text-amber-400 underline hover:text-white"
+              >
+                Reset 45s timer
+              </button>
             </div>
             <div>
-              1. Type your prompt or click any preset above.<br />
-              2. Click <strong>Generate Brand-New AI Image</strong>.<br />
-              3. If you like the result, click <strong>Send to Canvas Editor</strong>. If you want a different visual, click <strong>Re-roll</strong>!
+              Pollinations Turbo provides 100% free diffusion with a <strong>45-second recharge window</strong> per generation. Once the countdown ends, you can generate another photo!
             </div>
           </div>
         </div>
@@ -300,15 +461,24 @@ export default function GeneratorPage() {
               </h3>
               <p className="text-[11px] text-gray-400">Generated visual output ready for stamping and export</p>
             </div>
-            <span className="text-xs text-purple-400 font-mono font-bold bg-purple-500/10 px-2.5 py-1 rounded-lg border border-purple-500/20">
-              Seed #{currentImage.seed}
-            </span>
+
+            <div className="flex items-center gap-2">
+              {cooldown > 0 ? (
+                <span className="text-xs text-amber-400 font-mono font-bold bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20">
+                  ⏳ 00:{cooldown < 10 ? `0${cooldown}` : cooldown}
+                </span>
+              ) : (
+                <span className="text-xs text-purple-400 font-mono font-bold bg-purple-500/10 px-2.5 py-1 rounded-lg border border-purple-500/20">
+                  Seed #{currentImage.seed}
+                </span>
+              )}
+            </div>
           </div>
 
-          {/* THE SINGLE IMAGE PREVIEW BOX */}
+          {/* THE SINGLE IMAGE PREVIEW BOX WITH 45S COOLDOWN OVERLAY */}
           <div className="relative w-full rounded-2xl overflow-hidden border-2 border-purple-500/40 bg-[#080B12] shadow-2xl group flex items-center justify-center min-h-[420px] max-h-[560px]">
             
-            {/* Image */}
+            {/* The Image (Only shown cleanly when not covered by rate limit) */}
             <img
               src={currentImage.url}
               alt="Generated Campaign Visual"
@@ -326,11 +496,66 @@ export default function GeneratorPage() {
 
             {/* Loading Shimmer / Spinner Overlay */}
             {isGenerating && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm z-30 space-y-3">
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/75 backdrop-blur-sm z-30 space-y-3">
                 <div className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
                 <div className="text-center">
                   <p className="text-sm font-bold text-white">Synthesizing Brand-New Pixels...</p>
                   <p className="text-xs text-gray-400 mt-0.5">Pollinations Turbo Diffusion is drawing your prompt</p>
+                </div>
+              </div>
+            )}
+
+            {/* ========================================================
+                45-SECOND RATE LIMIT COUNTDOWN OVERLAY
+                Completely covers and removes the yellow screen!
+               ======================================================== */}
+            {cooldown > 0 && !isGenerating && (
+              <div className="absolute inset-0 z-25 bg-[#090D18]/95 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center space-y-4">
+                
+                {/* Glowing Circular Timer Ring */}
+                <div className="relative flex items-center justify-center">
+                  <div className="w-24 h-24 rounded-full border-4 border-purple-500/20 border-t-purple-500 animate-spin"></div>
+                  <div className="absolute flex flex-col items-center justify-center">
+                    <span className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-amber-300 font-mono">
+                      {cooldown}s
+                    </span>
+                    <span className="text-[9px] uppercase tracking-wider text-gray-400 font-bold">Cooldown</span>
+                  </div>
+                </div>
+
+                <div className="space-y-1.5 max-w-sm">
+                  <h4 className="text-base font-extrabold text-white flex items-center justify-center gap-1.5">
+                    <span>⏳</span> Free Tier Recharging (45s Limit)
+                  </h4>
+                  <p className="text-xs text-gray-300 leading-relaxed">
+                    Pollinations Turbo allows <strong>1 free generation every 45 seconds</strong>. The yellow limit screen is blocked and your next creative slot will unlock automatically!
+                  </p>
+                </div>
+
+                {/* Live Progress Bar */}
+                <div className="w-full max-w-xs bg-white/10 rounded-full h-2 overflow-hidden shadow-inner">
+                  <div
+                    className="bg-gradient-to-r from-purple-500 via-pink-500 to-emerald-400 h-full transition-all duration-1000"
+                    style={{ width: `${((45 - cooldown) / 45) * 100}%` }}
+                  ></div>
+                </div>
+
+                <div className="flex items-center gap-3 pt-1">
+                  <button
+                    type="button"
+                    onClick={handleResetToCleanStudio}
+                    className="text-xs bg-white/5 hover:bg-white/10 text-gray-300 border border-white/10 px-3 py-1.5 rounded-xl transition"
+                  >
+                    📸 Show Clean Studio Base
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setCooldown(0)}
+                    className="text-xs bg-purple-600/30 hover:bg-purple-600/50 text-purple-200 border border-purple-500/40 px-3 py-1.5 rounded-xl font-bold transition"
+                  >
+                    ⚡ Force Unlock Now
+                  </button>
                 </div>
               </div>
             )}
@@ -375,10 +600,23 @@ export default function GeneratorPage() {
               <button
                 type="button"
                 onClick={() => handleGenerateAI()}
-                disabled={isGenerating}
-                className="bg-[#141A28] hover:bg-purple-600/20 border border-purple-500/30 text-purple-300 hover:text-white text-xs font-semibold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                disabled={isGenerating || cooldown > 0}
+                className={`text-xs font-semibold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 ${
+                  cooldown > 0
+                    ? "bg-[#101420] border border-white/5 text-gray-500 cursor-not-allowed"
+                    : "bg-[#141A28] hover:bg-purple-600/20 border border-purple-500/30 text-purple-300 hover:text-white cursor-pointer"
+                }`}
               >
-                <span>🎲</span> Re-roll
+                <span>🎲</span> {cooldown > 0 ? `Re-roll (${cooldown}s)` : "Re-roll"}
+              </button>
+
+              <button
+                type="button"
+                onClick={handleResetToCleanStudio}
+                className="bg-[#141A28] hover:bg-white/10 border border-white/10 text-gray-400 hover:text-white text-xs font-semibold px-3 py-2 rounded-xl transition"
+                title="Restore clean preview background"
+              >
+                Reset View
               </button>
             </div>
 

@@ -3,8 +3,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
-
 export interface User {
   id: number;
   full_name: string;
@@ -58,6 +56,7 @@ interface AuthContextType {
   deleteAdminMessage: (id: number) => Promise<void>;
   removeUser: (userId: number, userEmail: string) => Promise<{ success: boolean; error?: string }>;
   refreshUsers: () => void;
+  updateProfile: (newName: string) => Promise<{ success: boolean; error?: string }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -151,20 +150,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (savedToken && savedUser) {
         let parsed = JSON.parse(savedUser);
-        // Cleanse legacy hardcoded session and ensure Master Admin is Ramya Deepika Kudelli
+        // Cleanse legacy placeholder accounts only
         if (
-          parsed.role === "Admin" ||
           parsed.full_name === "Vikram Malhotra" ||
-          parsed.full_name === "Ramya Kudelli" ||
-          parsed.email === "admin@launchai.com" ||
-          parsed.email === "ramyadeepikakudelli@gmail.com"
+          parsed.email === "admin@launchai.com"
         ) {
           parsed.full_name = "Ramya Deepika Kudelli";
           parsed.email = "ramyadeepikakudelli@gmail.com";
           parsed.role = "Admin";
-          parsed.phone = "7013370889";
-          parsed.dob = "Aug 25";
-          parsed.age = 24;
           localStorage.setItem('launch_ai_user', JSON.stringify(parsed));
         }
         setToken(savedToken);
@@ -207,6 +200,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     role?: string
   ): Promise<{ success: boolean; error?: string }> => {
     const cleanEmail = email.trim().toLowerCase();
+    const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
 
     try {
       // 1. Try FastAPI backend authentication if online
@@ -271,7 +265,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const activeRole = isMasterAdmin ? "Admin" : ((account.role as User['role']) || "Designer");
       const sessionUser: User = {
         id: account.id || Math.floor(Math.random() * 8000) + 1000,
-        full_name: isMasterAdmin ? "Ramya Deepika Kudelli" : account.full_name,
+        full_name: account.full_name || (isMasterAdmin ? "Ramya Deepika Kudelli" : "Creator"),
         email: cleanEmail,
         role: activeRole,
         org_id: 1,
@@ -324,6 +318,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       // 1. Try FastAPI registration if online
       try {
+        const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
         await fetch(`${API_BASE}/auth/signup`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -382,7 +377,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       // 1. Delete from backend if online
       try {
-        await fetch(`${API_BASE}/users/${userId}`, { method: "DELETE" });
+        await fetch(`http://localhost:8000/api/users/${userId}`, { method: "DELETE" });
       } catch (err) {}
 
       // 2. Delete from local registry
@@ -432,7 +427,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       // Try backend
       try {
-        await fetch(`${API_BASE}/messages`, {
+        await fetch("http://localhost:8000/api/messages", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -458,7 +453,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const deleteAdminMessage = async (id: number) => {
     try {
       try {
-        await fetch(`${API_BASE}/messages/${id}`, { method: "DELETE" });
+        await fetch(`http://localhost:8000/api/messages/${id}`, { method: "DELETE" });
       } catch (e) {}
       const updated = messages.filter(m => m.id !== id);
       setMessages(updated);
@@ -490,6 +485,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const updateProfile = async (newName: string): Promise<{ success: boolean; error?: string }> => {
+    const trimmed = newName.trim();
+    if (!trimmed) {
+      return { success: false, error: "Name cannot be empty." };
+    }
+    if (!user) {
+      return { success: false, error: "No active user session." };
+    }
+
+    const updatedUser: User = {
+      ...user,
+      full_name: trimmed
+    };
+
+    setUser(updatedUser);
+    localStorage.setItem('launch_ai_user', JSON.stringify(updatedUser));
+
+    try {
+      const reg = JSON.parse(localStorage.getItem('launch_ai_registered_users') || "{}");
+      const cleanEmail = user.email.toLowerCase();
+      if (reg[cleanEmail]) {
+        reg[cleanEmail].full_name = trimmed;
+        localStorage.setItem('launch_ai_registered_users', JSON.stringify(reg));
+        setRegisteredUsers(Object.values(reg));
+      }
+    } catch (e) {}
+
+    return { success: true };
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -505,7 +530,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         sendAdminMessage,
         deleteAdminMessage,
         removeUser,
-        refreshUsers
+        refreshUsers,
+        updateProfile
       }}
     >
       {children}
