@@ -58,7 +58,7 @@ function CanvasEditorContent() {
 
         <div className="flex gap-3">
           <Link
-            href={`/validation?title=${encodeURIComponent(headline)}&price=${encodeURIComponent(price)}&brand=${encodeURIComponent(brand)}&features=${encodeURIComponent(features)}&disclaimer=${encodeURIComponent(disclaimer)}&bg=${encodeURIComponent(bgUrl)}`}
+            href={`/validation?title=${encodeURIComponent(headline)}&price=${encodeURIComponent(price)}&brand=${encodeURIComponent(brand)}&features=${encodeURIComponent(features)}&disclaimer=${encodeURIComponent(disclaimer)}&bg=${encodeURIComponent(bgUrl)}&badgeColor=${encodeURIComponent(badgeColor)}&ratio=${encodeURIComponent(ratio)}`}
             onClick={() => {
               try {
                 localStorage.setItem('launch_ai_audit_campaign_name', headline);
@@ -67,6 +67,8 @@ function CanvasEditorContent() {
                 localStorage.setItem('launch_ai_audit_disclaimer', disclaimer);
                 localStorage.setItem('launch_ai_audit_brand', brand);
                 localStorage.setItem('launch_ai_audit_bg', bgUrl);
+                localStorage.setItem('launch_ai_audit_badgeColor', badgeColor);
+                localStorage.setItem('launch_ai_audit_ratio', ratio);
               } catch (e) {}
             }}
             className="gradient-btn-purple text-white font-bold px-4 py-2 rounded-xl text-xs transition shadow flex items-center gap-1.5"
