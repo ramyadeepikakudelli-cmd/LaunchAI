@@ -58,7 +58,17 @@ function CanvasEditorContent() {
 
         <div className="flex gap-3">
           <Link
-            href="/validation"
+            href={`/validation?title=${encodeURIComponent(headline)}&price=${encodeURIComponent(price)}&brand=${encodeURIComponent(brand)}&features=${encodeURIComponent(features)}&disclaimer=${encodeURIComponent(disclaimer)}&bg=${encodeURIComponent(bgUrl)}`}
+            onClick={() => {
+              try {
+                localStorage.setItem('launch_ai_audit_campaign_name', headline);
+                localStorage.setItem('launch_ai_audit_price', price);
+                localStorage.setItem('launch_ai_audit_features', features);
+                localStorage.setItem('launch_ai_audit_disclaimer', disclaimer);
+                localStorage.setItem('launch_ai_audit_brand', brand);
+                localStorage.setItem('launch_ai_audit_bg', bgUrl);
+              } catch (e) {}
+            }}
             className="gradient-btn-purple text-white font-bold px-4 py-2 rounded-xl text-xs transition shadow flex items-center gap-1.5"
           >
             <span>🛡️</span> Run Brand Guardian Audit →
