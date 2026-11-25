@@ -19,7 +19,7 @@ function ValidationContent() {
   const router = useRouter();
   const { user } = useAuth();
 
-  const [campaignTitle, setCampaignTitle] = useState("Experience Truly Unlimited 5G Speeds");
+  const [campaignTitle, setCampaignTitle] = useState("");
   const [price, setPrice] = useState("₹349");
   const [features, setFeatures] = useState("2.5 GB/Day • Zero Throttling • Free JioCinema Pass");
   const [brand, setBrand] = useState("JIO TRUE 5G");
@@ -31,23 +31,69 @@ function ValidationContent() {
 
   useEffect(() => {
     try {
-      const titleParam = searchParams.get('title') || localStorage.getItem('launch_ai_audit_campaign_name');
-      const priceParam = searchParams.get('price') || localStorage.getItem('launch_ai_audit_price');
-      const featuresParam = searchParams.get('features') || localStorage.getItem('launch_ai_audit_features');
-      const brandParam = searchParams.get('brand') || localStorage.getItem('launch_ai_audit_brand');
-      const disclaimerParam = searchParams.get('disclaimer') || localStorage.getItem('launch_ai_audit_disclaimer');
-      const bgParam = searchParams.get('bg') || localStorage.getItem('launch_ai_audit_bg') || localStorage.getItem('launch_ai_canvas_bg');
-      const colorParam = searchParams.get('badgeColor') || localStorage.getItem('launch_ai_audit_badgeColor');
-      const ratioParam = searchParams.get('ratio') || localStorage.getItem('launch_ai_audit_ratio');
+      // 1. Layer 1 Headline Copy
+      if (searchParams.has('title')) {
+        setCampaignTitle(searchParams.get('title') ?? '');
+      } else {
+        const stored = localStorage.getItem('launch_ai_audit_campaign_name');
+        setCampaignTitle(stored !== null ? stored : "Experience Truly Unlimited 5G Speeds");
+      }
 
-      if (titleParam) setCampaignTitle(titleParam);
-      if (priceParam) setPrice(priceParam);
-      if (featuresParam) setFeatures(featuresParam);
-      if (brandParam) setBrand(brandParam);
-      if (disclaimerParam) setDisclaimer(disclaimerParam);
-      if (bgParam) setImageUrl(bgParam);
-      if (colorParam) setBadgeColor(colorParam);
-      if (ratioParam) setRatio(ratioParam);
+      // 2. Layer 3 Price Tag
+      if (searchParams.has('price')) {
+        setPrice(searchParams.get('price') ?? '');
+      } else {
+        const stored = localStorage.getItem('launch_ai_audit_price');
+        setPrice(stored !== null ? stored : "₹349");
+      }
+
+      // 3. Layer 2 Features & Benefits
+      if (searchParams.has('features')) {
+        setFeatures(searchParams.get('features') ?? '');
+      } else {
+        const stored = localStorage.getItem('launch_ai_audit_features');
+        setFeatures(stored !== null ? stored : "2.5 GB/Day • Zero Throttling • Free JioCinema Pass");
+      }
+
+      // 4. Brand
+      if (searchParams.has('brand')) {
+        setBrand(searchParams.get('brand') ?? '');
+      } else {
+        const stored = localStorage.getItem('launch_ai_audit_brand');
+        setBrand(stored !== null ? stored : "JIO TRUE 5G");
+      }
+
+      // 5. Layer 4 Regulatory Disclaimer
+      if (searchParams.has('disclaimer')) {
+        setDisclaimer(searchParams.get('disclaimer') ?? '');
+      } else {
+        const stored = localStorage.getItem('launch_ai_audit_disclaimer');
+        setDisclaimer(stored !== null ? stored : "*Terms apply. 5G speeds vary by city.");
+      }
+
+      // 6. Background Image URL
+      if (searchParams.has('bg')) {
+        setImageUrl(searchParams.get('bg') ?? '');
+      } else {
+        const stored = localStorage.getItem('launch_ai_audit_bg') || localStorage.getItem('launch_ai_canvas_bg');
+        setImageUrl(stored !== null ? stored : "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1024&h=1024&q=85");
+      }
+
+      // 7. Price Pill Badge Color
+      if (searchParams.has('badgeColor')) {
+        setBadgeColor(searchParams.get('badgeColor') ?? '#E31B23');
+      } else {
+        const stored = localStorage.getItem('launch_ai_audit_badgeColor');
+        setBadgeColor(stored !== null ? stored : "#E31B23");
+      }
+
+      // 8. Aspect Ratio
+      if (searchParams.has('ratio')) {
+        setRatio(searchParams.get('ratio') ?? '1:1');
+      } else {
+        const stored = localStorage.getItem('launch_ai_audit_ratio');
+        setRatio(stored !== null ? stored : "1:1");
+      }
     } catch (e) {}
   }, [searchParams]);
 
@@ -58,11 +104,41 @@ function ValidationContent() {
   const evaluateCompliance = (): { score: number; status: string; checks: CheckItem[] } => {
     const checks: CheckItem[] = [];
 
-    // 1. Tariff & Price Integrity (Max 15 Pts)
+    // 1. Layer 1: Headline Copy & Promotional Clarity (Max 25 Pts)
+    const cleanTitle = (campaignTitle || '').trim();
+    if (cleanTitle.length >= 6) {
+      checks.push({
+        name: "Layer 1: Promotional Headline Clarity",
+        status: "PASSED",
+        points: 25,
+        maxPoints: 25,
+        detail: `Verified primary offer headline: "${cleanTitle}"`
+      });
+    } else if (cleanTitle.length > 0) {
+      checks.push({
+        name: "Layer 1: Promotional Headline Clarity",
+        status: "WARNING",
+        points: 10,
+        maxPoints: 25,
+        detail: `Headline "${cleanTitle}" is too brief (< 6 characters) for effective consumer comprehension.`,
+        tip: "Enter a clear promotional headline in Canvas Studio (e.g. 'Experience Truly Unlimited 5G Speeds')"
+      });
+    } else {
+      checks.push({
+        name: "Layer 1: Promotional Headline Clarity",
+        status: "FAILED",
+        points: 0,
+        maxPoints: 25,
+        detail: "CRITICAL DEFECT: Layer 1 Headline Copy is missing or blank! An advertising banner cannot be released without an offer headline.",
+        tip: "Add Layer 1: Headline Copy in Canvas Studio before submitting for approval"
+      });
+    }
+
+    // 2. Layer 3: Tariff & Price Integrity (Max 15 Pts)
     const cleanPrice = (price || '').trim();
     if (cleanPrice && (cleanPrice.includes('₹') || cleanPrice.includes('$')) && /\d/.test(cleanPrice)) {
       checks.push({
-        name: "Tariff & Price Integrity",
+        name: "Layer 3: Tariff & Price Integrity",
         status: "PASSED",
         points: 15,
         maxPoints: 15,
@@ -70,83 +146,62 @@ function ValidationContent() {
       });
     } else if (cleanPrice && /\d/.test(cleanPrice)) {
       checks.push({
-        name: "Tariff & Price Integrity",
+        name: "Layer 3: Tariff & Price Integrity",
         status: "WARNING",
         points: 7,
         maxPoints: 15,
         detail: `Price declared as "${cleanPrice}" without currency symbol (₹ or $). High risk of regulatory audit.`,
-        tip: "Add ₹ before the price in the Canvas Editor (e.g. ₹349)"
+        tip: "Add ₹ before the price in Canvas Studio (e.g. ₹349)"
       });
     } else {
       checks.push({
-        name: "Tariff & Price Integrity",
+        name: "Layer 3: Tariff & Price Integrity",
         status: "FAILED",
         points: 0,
         maxPoints: 15,
-        detail: `Missing or invalid tariff price: "${cleanPrice}". All telecom ads require verified pricing.`,
-        tip: "Specify a valid numeric price with ₹ in the Canvas Editor"
+        detail: `CRITICAL: Layer 3 Price Tag is missing or blank! All promotional telecom ads mandate verified pricing.`,
+        tip: "Specify a valid numeric price with ₹ in Canvas Studio"
       });
     }
 
-    // 2. Data Quota Disclosure (Max 15 Pts)
+    // 3. Layer 2: Features & Data Quota Disclosure (Max 15 Pts)
     const upperFeatures = (features || '').toUpperCase();
     if (upperFeatures.includes('GB') || upperFeatures.includes('MB') || upperFeatures.includes('UNLIMITED')) {
       const hasDaily = upperFeatures.includes('DAY') || upperFeatures.includes('/DAY') || upperFeatures.includes('PER DAY');
       if (hasDaily) {
         checks.push({
-          name: "Data Quota Disclosure",
+          name: "Layer 2: Data Quota & Benefit Disclosure",
           status: "PASSED",
           points: 15,
           maxPoints: 15,
-          detail: `Transparent daily data quota verified: "${features}"`
+          detail: `Transparent daily data quota verified: "${features.trim()}"`
         });
       } else {
         checks.push({
-          name: "Data Quota Disclosure",
+          name: "Layer 2: Data Quota & Benefit Disclosure",
           status: "WARNING",
-          points: 10,
+          points: 8,
           maxPoints: 15,
-          detail: `Quota mentioned ("${features}") but lacks explicit daily reset disclosure (/Day).`,
-          tip: "Add '/Day' to your benefits (e.g. 2.5 GB/Day)"
+          detail: `Quota mentioned ("${features.trim()}") but lacks explicit daily reset disclosure (/Day).`,
+          tip: "Add '/Day' to your benefits in Canvas Studio (e.g. 2.5 GB/Day)"
         });
       }
     } else {
       checks.push({
-        name: "Data Quota Disclosure",
+        name: "Layer 2: Data Quota & Benefit Disclosure",
         status: "FAILED",
         points: 0,
         maxPoints: 15,
-        detail: `No data quota units detected in "${features}". TRAI broadband rules mandate clear GB limits.`,
-        tip: "Include GB/Day in Features & Benefits"
+        detail: `CRITICAL: Layer 2 Features & Benefits is missing or blank! TRAI broadband rules mandate clear GB limits.`,
+        tip: "Include GB/Day in Features & Benefits in Canvas Studio"
       });
     }
 
-    // 3. Validity Cycle Transparency (Max 15 Pts)
-    const combinedText = `${features} ${campaignTitle} ${disclaimer}`.toUpperCase();
-    if (combinedText.includes('DAY') || combinedText.includes('MONTH') || combinedText.includes('YEAR') || combinedText.includes('WEEK')) {
-      checks.push({
-        name: "Validity Cycle Transparency",
-        status: "PASSED",
-        points: 15,
-        maxPoints: 15,
-        detail: "Billing cycle confirmed: Active standard recharge cycle"
-      });
-    } else {
-      checks.push({
-        name: "Validity Cycle Transparency",
-        status: "WARNING",
-        points: 8,
-        maxPoints: 15,
-        detail: "No validity period found in headline or benefits. TRAI requires billing cycle disclosure.",
-        tip: "Mention validity (e.g. 28 Days) in features or disclaimer"
-      });
-    }
-
-    // 4. FTC / ASCI Legal Asterisk Disclaimer (Max 20 Pts - Highest Legal Weight!)
+    // 4. Layer 4: FTC / ASCI Legal Asterisk Disclaimer (Max 20 Pts - Highest Legal Weight!)
     const cleanDisc = (disclaimer || '').trim();
     if (cleanDisc.includes('*') && cleanDisc.length >= 18) {
       checks.push({
-        name: "FTC / ASCI Asterisk Fine-Print",
+        name: "Layer 4: FTC / ASCI Asterisk Fine-Print",
         status: "PASSED",
         points: 20,
         maxPoints: 20,
@@ -154,47 +209,46 @@ function ValidationContent() {
       });
     } else if (cleanDisc.includes('*')) {
       checks.push({
-        name: "FTC / ASCI Asterisk Fine-Print",
+        name: "Layer 4: FTC / ASCI Asterisk Fine-Print",
         status: "WARNING",
         points: 9,
         maxPoints: 20,
         detail: `Asterisk present but disclaimer is too brief (${cleanDisc.length} chars). Legal conditions may be ambiguous.`,
-        tip: "Expand disclaimer to at least 18 characters (e.g. *Terms apply. Speeds vary.)"
+        tip: "Expand disclaimer to at least 18 characters (e.g. *Terms apply. 5G speeds vary by city.)"
       });
     } else {
       checks.push({
-        name: "FTC / ASCI Asterisk Fine-Print",
+        name: "Layer 4: FTC / ASCI Asterisk Fine-Print",
         status: "FAILED",
         points: 0,
         maxPoints: 20,
-        detail: "CRITICAL LEGAL VIOLATION: Mandatory asterisk (*) fine-print footnote is completely missing!",
-        tip: "Add *Terms apply at the start of the disclaimer in Canvas Editor"
+        detail: "CRITICAL LEGAL VIOLATION: Layer 4 Regulatory Small Print footnote or mandatory asterisk (*) is missing!",
+        tip: "Add *Terms apply at the start of the disclaimer in Canvas Studio"
       });
     }
 
-    // 5. Brand Guidelines Adherence (Max 15 Pts)
+    // 5. Brand Guidelines Adherence (Max 10 Pts)
     const upperBrand = (brand || '').toUpperCase();
     if (upperBrand.includes('JIO') || upperBrand.includes('AIRTEL') || upperBrand.includes('VI') || upperBrand.includes('RELIANCE')) {
       checks.push({
         name: "Brand Guidelines Adherence",
         status: "PASSED",
-        points: 15,
-        maxPoints: 15,
-        detail: `Primary color palette matched to official ${brand} corporate brand kit`
+        points: 10,
+        maxPoints: 10,
+        detail: `Primary color palette matched to official ${brand.trim()} corporate brand kit`
       });
     } else {
       checks.push({
         name: "Brand Guidelines Adherence",
         status: "WARNING",
-        points: 8,
-        maxPoints: 15,
-        detail: `Custom or unregistered brand identifier: "${brand}". Default typography applied.`,
-        tip: "Select an official operator brand (Jio, Airtel, Vi) in the editor"
+        points: 5,
+        maxPoints: 10,
+        detail: `Custom or unregistered brand identifier: "${brand.trim() || 'Unassigned'}". Default typography applied.`,
+        tip: "Select an official operator brand (Jio, Airtel, Vi) in Canvas Studio"
       });
     }
 
     // 6. WCAG AAA Contrast Ratio (Max 10 Pts)
-    // Darker badges (#E31B23, #0A2885, #2563EB, #10B981) give AAA > 7.1:1, light colors give lower
     const isHighContrast = ['#E31B23', '#0A2885', '#2563EB', '#10B981', '#1D4ED8', '#B91C1C'].includes(badgeColor.toUpperCase());
     if (isHighContrast) {
       checks.push({
@@ -261,12 +315,12 @@ function ValidationContent() {
 
     const newSubmission = {
       id: Date.now(),
-      campaign: campaignTitle,
-      brand: brand,
-      plan: `${campaignTitle} (${price})`,
+      campaign: campaignTitle.trim() || "(Untitled Campaign - Layer 1 Missing)",
+      brand: brand || "Brand Unassigned",
+      plan: `${campaignTitle.trim() || "(Untitled Campaign)"} (${price || "No Price"})`,
       submitter: `${user?.full_name || "Designer"} (${user?.role || "Designer"})`,
       date: new Date().toISOString().slice(0, 16).replace('T', ' '),
-      score: `${auditResults.score}/100 (Passed Brand Guardian)`,
+      score: `${auditResults.score}/100 (${auditResults.status})`,
       status: "Pending Review",
       image: imageUrl
     };
@@ -329,7 +383,7 @@ function ValidationContent() {
         <div className="p-4 bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs rounded-2xl flex items-center gap-2 shadow-lg">
           <span>🎉</span>
           <span>
-            <strong>Submitted!</strong> Campaign &quot;{campaignTitle}&quot; (Score: {auditResults.score}/100) has been forwarded to the Manager Approvals queue. Redirecting...
+            <strong>Submitted!</strong> Campaign &quot;{campaignTitle.trim() || "(Untitled Campaign)"}&quot; (Score: {auditResults.score}/100) has been forwarded to the Manager Approvals queue. Redirecting...
           </span>
         </div>
       )}
@@ -381,9 +435,17 @@ function ValidationContent() {
         {/* Dynamic Target Creative Details */}
         <div className="text-left sm:text-right bg-[#0B0F19] sm:bg-transparent p-3.5 sm:p-0 rounded-xl sm:rounded-none w-full sm:w-auto border sm:border-0 border-white/5">
           <div className="text-[11px] text-gray-400 font-bold uppercase tracking-wider">Audited Creative:</div>
-          <div className="text-sm font-extrabold text-white mt-0.5 max-w-xs truncate">{campaignTitle}</div>
+          <div className="text-sm font-extrabold text-white mt-0.5 max-w-xs truncate">
+            {campaignTitle.trim() ? (
+              campaignTitle
+            ) : (
+              <span className="text-red-400 font-bold italic font-mono">
+                (Layer 1 Headline Missing)
+              </span>
+            )}
+          </div>
           <div className="text-xs text-purple-400 font-medium mt-0.5">
-            {brand} • <span className="font-bold text-emerald-400">{price || "(No Price)"}</span> • <span className="text-gray-400">{ratio}</span>
+            {brand || "(No Brand)"} • <span className="font-bold text-emerald-400">{price || "(No Price)"}</span> • <span className="text-gray-400">{ratio}</span>
           </div>
         </div>
       </div>

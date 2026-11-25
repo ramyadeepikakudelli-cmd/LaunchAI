@@ -23,10 +23,60 @@ function CanvasEditorContent() {
     "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1024&h=1024&q=85"
   );
 
+  // Load saved canvas state if available
+  useEffect(() => {
+    try {
+      const storedHeadline = localStorage.getItem('launch_ai_canvas_headline');
+      if (storedHeadline !== null) setHeadline(storedHeadline);
+      const storedFeatures = localStorage.getItem('launch_ai_canvas_features');
+      if (storedFeatures !== null) setFeatures(storedFeatures);
+      const storedPrice = localStorage.getItem('launch_ai_canvas_price');
+      if (storedPrice !== null) setPrice(storedPrice);
+      const storedDisclaimer = localStorage.getItem('launch_ai_canvas_disclaimer');
+      if (storedDisclaimer !== null) setDisclaimer(storedDisclaimer);
+      const storedBrand = localStorage.getItem('launch_ai_canvas_brand');
+      if (storedBrand !== null) setBrand(storedBrand);
+      const storedBadgeColor = localStorage.getItem('launch_ai_canvas_badgeColor');
+      if (storedBadgeColor !== null) setBadgeColor(storedBadgeColor);
+      const storedRatio = localStorage.getItem('launch_ai_canvas_ratio');
+      if (storedRatio !== null) setRatio(storedRatio as any);
+    } catch (e) {}
+  }, []);
+
+  // Sync state changes immediately to localStorage so Reports and validation stay in sync
+  useEffect(() => {
+    try {
+      localStorage.setItem('launch_ai_canvas_headline', headline);
+      localStorage.setItem('launch_ai_audit_campaign_name', headline);
+
+      localStorage.setItem('launch_ai_canvas_features', features);
+      localStorage.setItem('launch_ai_audit_features', features);
+
+      localStorage.setItem('launch_ai_canvas_price', price);
+      localStorage.setItem('launch_ai_audit_price', price);
+
+      localStorage.setItem('launch_ai_canvas_disclaimer', disclaimer);
+      localStorage.setItem('launch_ai_audit_disclaimer', disclaimer);
+
+      localStorage.setItem('launch_ai_canvas_brand', brand);
+      localStorage.setItem('launch_ai_audit_brand', brand);
+
+      localStorage.setItem('launch_ai_canvas_bg', bgUrl);
+      localStorage.setItem('launch_ai_audit_bg', bgUrl);
+
+      localStorage.setItem('launch_ai_canvas_badgeColor', badgeColor);
+      localStorage.setItem('launch_ai_audit_badgeColor', badgeColor);
+
+      localStorage.setItem('launch_ai_canvas_ratio', ratio);
+      localStorage.setItem('launch_ai_audit_ratio', ratio);
+    } catch (e) {}
+  }, [headline, features, price, disclaimer, brand, bgUrl, badgeColor, ratio]);
+
   useEffect(() => {
     if (bgParam) {
       setBgUrl(bgParam);
       localStorage.setItem('launch_ai_canvas_bg', bgParam);
+      localStorage.setItem('launch_ai_audit_bg', bgParam);
     } else {
       const stored = localStorage.getItem('launch_ai_canvas_bg');
       if (stored) {
